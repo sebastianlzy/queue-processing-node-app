@@ -4,11 +4,11 @@ ENV NODE_ENV=production
 
 WORKDIR /app
 
-COPY ["./queue-processing-node-app/package.json", "./queue-processing-node-app/package-lock.json*", "./"]
+COPY ["./package.json", "./package-lock.json*", "./"]
 
 RUN echo $(ls ) && npm install --production
 
-COPY ./queue-processing-node-app .
+COPY . .
 EXPOSE 3000
 
 CMD [ "node", "index.js" ]
