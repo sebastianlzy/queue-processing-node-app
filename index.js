@@ -1,4 +1,5 @@
 const express = require('express')
+const moment = require('moment')
 const {SQSClient, SendMessageCommand, GetQueueAttributesCommand} = require("@aws-sdk/client-sqs");
 
 
@@ -10,14 +11,18 @@ const client = new SQSClient({});
 app.get('/', (req, res) => {
     console.log(process.env)
     const command = new GetQueueAttributesCommand({
-        QueueUrl: sqsQueueURL
+        QueueUrl: sqsQueueURL,
+        AttributeNames: ["All"]
     })
 
     return client.send(command)
         .then((data) => {
-            res.end(data)
+            console.log(data)
+            res.end(JSON.stringify(data))
         }).catch((err) => {
-            res.status(500).end(err)
+            console.log(err)
+            res.status(500)
+            res.end(JSON.stringify(err))
         })
 })
 
@@ -35,9 +40,9 @@ app.get('/send-message', (req, res) => {
 
     return Promise.all(promises)
         .then((data) => {
-            res.end(data)
+            res.end(JSON.stringify(data))
         }).catch((err) => {
-            res.status(500).end(err)
+            res.end(JSON.stringify(err))
         })
 
 })
@@ -45,3 +50,9 @@ app.get('/send-message', (req, res) => {
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
 })
+
+process.on('SIGINT', function() {
+    console.log( "\nGracefully shutting down from SIGINT (Ctrl-C)" );
+    // some other closing procedures go here
+    process.exit(1);
+});

@@ -20,13 +20,14 @@ const processMessage = () => {
             if (data.Messages) {
                 data.Messages.forEach((message) => {
                     const receiptHandle = message.ReceiptHandle
-                    console.log(`Processing 500 ms, ${receiptHandle}: ${message.Body}`)
+                    const body = message.Body
+                    console.log(`[Processing 500 ms] ${body}, ${receiptHandle}`)
                     setTimeout(() => {
                         new DeleteMessageCommand({
                             QueueUrl: sqsQueueURL,
                             ReceiptHandle: receiptHandle
                         })
-                        console.log(`${receiptHandle} deleted`)
+                        console.log(`[Deleted] ${body}, ${receiptHandle}`)
                     }, 500)
                 })
             }
