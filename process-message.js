@@ -16,18 +16,18 @@ const processMessage = () => {
 
     client.send(receiveMessageCommand).then(
         (data) => {
-            console.log(data.Messages)
+
             if (data.Messages) {
                 data.Messages.forEach((message) => {
-                    console.log("RECEIVED INFORMATION FROM QUEUE")
-                    console.log("BODY", message.Body)
-                    console.log("ATTRIBUTES", message.Attributes)
-                    console.log("===============================")
-
-                    const deleteMessageCommand = new DeleteMessageCommand({
-                        QueueUrl: sqsQueueURL,
-                        ReceiptHandle: message.ReceiptHandle
-                    })
+                    const receiptHandle = message.ReceiptHandle
+                    console.log(`Processing 500 ms, ${receiptHandle}: ${message.Body}`)
+                    setTimeout(() => {
+                        new DeleteMessageCommand({
+                            QueueUrl: sqsQueueURL,
+                            ReceiptHandle: receiptHandle
+                        })
+                        console.log(`${receiptHandle} deleted`)
+                    }, 500)
                 })
             }
 
