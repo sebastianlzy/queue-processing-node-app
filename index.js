@@ -9,7 +9,6 @@ const sqsQueueURL = process.env.QUEUE_URL
 const client = new SQSClient({});
 
 app.get('/', (req, res) => {
-    console.log(process.env)
     const command = new GetQueueAttributesCommand({
         QueueUrl: sqsQueueURL,
         AttributeNames: ["All"]
